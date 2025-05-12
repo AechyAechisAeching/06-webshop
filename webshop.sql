@@ -18,10 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `2324_wittekip`
+-- Database: `webshop`
 --
-CREATE DATABASE IF NOT EXISTS `2324_wittekip` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `2324_wittekip`;
+CREATE DATABASE IF NOT EXISTS `webshop` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `webshop`;
 
 -- --------------------------------------------------------
 
@@ -35,7 +35,6 @@ CREATE TABLE `cart` (
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `ordered` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -51,7 +50,6 @@ CREATE TABLE `cart_items` (
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `amount` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -65,19 +63,17 @@ CREATE TABLE `categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(150) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'Wedstrijd kippen', '2024-01-26 09:15:47', NULL),
-(2, 'Verf', '2024-01-26 09:15:47', NULL),
-(3, 'Broedmachines', '2024-01-26 09:16:03', NULL),
-(4, 'Hokken', '2024-01-26 09:16:03', NULL);
-
+INSERT INTO `categories` (`id`, `name`) VALUES
+(1, 'hoodies', '2024-01-26 09:15:47', NULL),
+(2, 'pants', '2024-01-26 09:15:47', NULL),
+(3, 'accessoires', NULL),
+(4, 'shoes', NULL);
 -- --------------------------------------------------------
 
 --
@@ -86,29 +82,26 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE `customers` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `firstname` varchar(100) NOT NULL,
-  `prefixes` varchar(30) DEFAULT NULL,
-  `lastname` varchar(100) NOT NULL,
-  `street` varchar(150) NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `prefixes` varchar(20) DEFAULT NULL,
+  `lastname` varchar(50) NOT NULL,
+  `street` varchar(100) NOT NULL,
   `house_number` varchar(10) NOT NULL,
   `addition` varchar(10) DEFAULT NULL,
   `zipcode` varchar(10) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `customers`
 --
 
-INSERT INTO `customers` (`id`, `firstname`, `prefixes`, `lastname`, `street`, `house_number`, `addition`, `zipcode`, `city`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'Johan', '', 'Strootman', 'Boumaboulevard', '573', '', '9721EG', 'Groningen', 'jj.strootman@alfa-college.nl', '$2y$10$1rHX.scZansoHkVSDb9WE.EL7OU1WQ4aNIZVH7bwpAirJ6iQdNCXS', '2024-01-29 15:34:41', '2024-01-29 15:34:41'),
-(2, 'Joop', '', 'Kopstoot', 'Gestote koppen laan', '99', 'a', '9900FG', 'Blauwekoppen', 'joop@kopstoot.com', '$2y$10$3S9Or1yK7sAS64io2z/EsuDLJ6VkGWEbg4ebLeWkS6qIkRDejzGKG', '2024-01-31 10:55:19', '2024-01-31 10:55:19'),
-(3, 'Truus', '', 'Molensteen', 'Oude molen', '1', '', '9911ZZ', 'Molen', 'truus@molen.com', '$2y$10$Yaxc/E42y1vGCNv1VmvB0OA.KKuQljgcAjWJ7CT2.AntoJEcsj6Yu', '2024-01-31 11:57:03', '2024-01-31 11:57:03');
+INSERT INTO `customers` (`id`, `firstname`, `prefixes`, `lastname`, `street`, `house_number`, `addition`, `zipcode`, `city`, `email`, `password`, `created_at`) VALUES
+-- (1, 'Vincent', '', 'Bakker', 'Willembergstraat', '32', '', '9611 ES', 'Sappemeer', 'v.bakker02@student.alfa-college.nl', 'Vincent', '12-05-2025'),
 
 -- --------------------------------------------------------
 
@@ -122,7 +115,6 @@ CREATE TABLE `orders` (
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `order_date` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -138,7 +130,6 @@ CREATE TABLE `order_items` (
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `amount` int(11) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -156,24 +147,14 @@ CREATE TABLE `products` (
   `price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00',
   `image` varchar(255) NOT NULL DEFAULT 'https://placehold.co/600x600',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `products`
 --
 
-INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `price`, `image`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Beginners kip', 'Een ideale kip voor beginnende wedstrijd deelnemer. Lichtgewicht waardoor deze kip de pols tijdens het optillen niet belast.', 19.95, 'img/white-chicken.jpg', '2024-01-26 09:19:27', NULL),
-(2, 1, 'Gevorderden kip', 'Kip voor de gevorderde wedstrijd deelnemer. Deze kip is gemakkelijk te draaien door zijn aangepaste nek- en rugwervels.', 29.95, 'img/brown-chicken.jpg', '2024-01-26 09:19:27', NULL),
-(3, 1, 'Professional kip', 'Voor de professionele wedstrijd deelnemer die iets meer uitdaging heeft. Deze kip is voorzien van een anti-afstootlaag, waardoor de verf beter blijft beklijven.', 49.95, 'img/black-chicken.jpg', '2024-01-26 09:21:57', NULL),
-(4, 2, '2.5L Witte verf', 'Ideale hoeveelheid verf voor de beginner die zich thuis op de wedstrijd wil voorbereiden.', 9.95, 'img/witte-verf-2-5l.jpg', '2024-01-26 09:21:57', NULL),
-(5, 2, '5L Witte verf', 'Met deze hoeveelheid kunt u thuis twee keer zoveel oefenen. ', 18.90, 'img/witte-verf-5l.jpg', '2024-01-26 09:24:51', NULL),
-(6, 3, 'Thuis broedmachine', 'Klein beginnen? Dan is deze broedmachine iets voor u. Ideaal voor de beginner die thuis z\'n eigen voorraad wedstrijdkippen wil fokken.', 79.95, 'img/broedmachine-small.jpg', '2024-01-26 09:24:51', NULL),
-(7, 3, 'Professionele broedmachine', 'Een vol automatische broedmachine en volledig programmeerbaar. Speciaal voor de professionele wedstrijd deelnemer.', 209.95, 'img/broedmachine-large.jpg', '2024-01-26 09:27:26', NULL),
-(8, 4, 'Basishok', 'Met deze hok kunt als beginner en gevorderde uw voorraad aan wedstrijdkippen netje huisvesten. Uw kippen blijven droog, zijn beschermd tegen weersinvloeden en roofdieren.', 75.00, 'img/kippenhok-small.jpg', '2024-01-26 09:27:26', NULL),
-(9, 4, 'Gevorderden hok', 'Ideaal voor de professional. Uw kippen hebben de gelegenheid tot uitlopen, kunnen zich terugtrekken in een geïsoleerd dichte deel van de hok. Hier zijn ze beschermd tegen weer en roofdieren. Door een speciale coating in het dichte deel blijven de kippen ook geschikt in de veren voor de wedstrijden.', 149.00, 'img/kippenhok-medium.jpg', '2024-01-26 09:29:42', NULL);
-
+INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `price`, `image`, `created_at`) VALUES
+(1, 1, 'hoodies', 'Attack on Titan Hoodie', 'Stap in de schoenen van een echte Scout met deze stijlvolle Attack on Titan hoodie, voorzien van het iconische Wings of Freedom-embleem van de Survey Corps. Perfect voor fans die klaar zijn om de muren te verlaten en de wereld te trotseren in stijl.', 39.95, '/dev/img/AnimeHoodie.jpg', NULL),
 -- --------------------------------------------------------
 
 --
@@ -187,7 +168,6 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
