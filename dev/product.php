@@ -27,36 +27,11 @@ $product = Database::get();
     width: 100%;
     height: 500px;
     object-fit: contain;
+    padding-bottom: 70px;
   }
 </style>
 
  <button class="btn" onclick="history.back()">Go Back</button>
-
-<style>
-  .btn {
-    background-color:rgb(6, 72, 255);
-    color: white;
-    padding: 12px 16px;
-    margin: 0px -200px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .btn:hover {
-    background-color:rgb(0, 56, 177);
-    transform: translateY(-2px);
-  }
-
-  .btn:active {
-    background-color:rgb(0, 0, 0);
-    transform: translateY(0);
-  }
-</style>
 
 <!-- -- Css Styles -- -->
 
@@ -68,15 +43,18 @@ $product = Database::get();
          </section>
          <section class="uk-width-1-2 uk-card-body uk-flex uk-flex-column uk-flex-between">
             <div>
-               <h1><?= $product->productname ?></h1>
-               <p>
+               <h1 style="font-weight: bold; border-bottom: 1px solid grey; padding-bottom: 15px;"><?= $product->productname ?></h1>
+               <p style="font-size: large;">
                   <?= $product->description ?>
                </p>
             </div>
             <div class="uk-flex uk-flex-between uk-flex-middle">
                <div class="price-block">
-                  <p class="product-view__price uk-text-bold uk-text-danger uk-text-left uk-text-bolder">
-                     &euro; <?= $product->price ?>
+                  
+                     <?php
+                     $formattedPrice = number_format($product->price, 2, ',', '')?>
+                     <p class="product-view__price uk-text-bold uk-text-danger uk-text-left uk-text-bolder">
+                     &euro; <?= $formattedPrice ?>
                   </p>
                </div>
                <div>

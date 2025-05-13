@@ -28,20 +28,23 @@ $products = Database::getAll();
 ?>
 
       <!-- -- Css Styles -- -->
-         <style>
-            
+       <style>
+/* Product Image */
 .product-image {
   width: 100%;
-  height: 200px;
-  object-fit: contain;
-  border-bottom: 2px solid black;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 0.75rem 0.75rem 0 0;
 }
+
+/* Filters */
 .category-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 30px;
+  gap: 12px;
+  margin-bottom: 2rem;
   align-items: center;
+  justify-content: center;
 }
 
 .category-filters input[type="checkbox"] {
@@ -50,75 +53,87 @@ $products = Database::getAll();
 
 .category-filters label {
   padding: 10px 18px;
-  border: 2px solid  rgb(201, 201, 201);
-  border-radius: 999px;
-  background-color: #f0f0f0;
+  border: 2px solid #d0d0d0;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
   color: #333;
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
   font-weight: 500;
-  user-select: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .category-filters input[type="checkbox"]:checked + label {
-  background-color:  rgba(0, 118, 253, 0.96);
-  color: #fff;
-  border-color: 3px solid black;
+  background: linear-gradient(to right, #0076fd, #3b82f6);
+  color: white;
+  border-color: #0076fd;
 }
 
 .category-filters label:hover {
-  background-color:  rgb(225, 230, 255);
+  background-color: rgba(225, 230, 255, 0.9);
+  transform: scale(1.05);
   color: #000;
-  border-color: #000;
-  transform: translateY(-1px) scale(1.04);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-
+/* Product Card */
 .product-card {
-  min-width: 400px;
-  max-width: 400px;
-  width: 100%;
-  border: 2px solid grey;
-  border-radius: 0.5rem;
-  transition: 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  width: 400px;
+  
 }
 
 .product-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 15px rgba(65, 65, 65, 0.41);
+  transform: translateY(-5px) scale(1.03);
 }
 
+.uk-card-body-home {
+  padding: 1.2rem;
+  text-align: center;
+}
 
 .product-card-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-left: 10px;
-  margin-bottom: 10px;
-  border-bottom: 4px solid black;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.6rem;
+  border-bottom: 2px solid #0076fd;
+  margin-left: 65px;
+  padding-bottom: 4px;
 }
 
 .product-card-p {
-  margin: 5px 0;
-}
+  margin: 6px 0;
+  margin-left: 50px;
+  font-size: 0.95rem;
+  color: #333;
 
+}
 
 .product-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color:rgb(255, 0, 0);
-  margin-top: 10px;
+  font-size: 23.2px;
+  font-weight: 700;
+  color: #ef4444;
+  margin-top: 12px;
 }
 
+/* Product Grid */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 30px;
-  width: 100%;
+  padding: 2px 0;
 }
-
-
 </style>
 
       <!-- -- Css Styles -- -->
@@ -204,12 +219,14 @@ $products = Database::getAll();
   <div class="uk-card-media-top uk-align-center">
     <img src="data:image/jpeg;base64,<?= base64_encode($product->image) ?>" alt="Product image" class="product-image">
   </div>
-  <div class="uk-card-body uk-card-body-home">
+ <div class="uk-card-body uk-card-body-home">
     <h4 class="product-card-title"><?= htmlspecialchars($product->productname) ?></h4>
     <p class="product-card-p"><?= substr($product->description, 0, 89) . '...' ?></p>
-    <p class="product-card-p product-price">&euro; <?= $product->price ?></p>
-  </div>
-</a>
+    <?php 
+      $formattedPrice = number_format($product->price, 2, ',', '');
+    ?>
+    <p class="product-card-p product-price">&euro; <?= $formattedPrice ?></p>
+</div>
 
 
                 
