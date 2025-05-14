@@ -107,7 +107,7 @@ $products = Database::getAll();
   font-weight: 700;
   color: #111827;
   margin-bottom: 0.6rem;
-  border-bottom: 2px solid #0076fd;
+  border-bottom: 2px solid rgb(0, 42, 90);
   margin-left: 65px;
   padding-bottom: 4px;
 }
@@ -198,6 +198,13 @@ $products = Database::getAll();
          <?= in_array('shoes', $selectedCategories ?? []) ? 'checked' : '' ?> />
       <label for="shoes">Shoes</label>
    </div>
+   
+   <div>
+      <input class="uk-checkbox" id="tshirts" type="checkbox" name="categories[]" value="tshirts"
+         onchange="document.getElementById('categoryForm').submit()" 
+         <?= in_array('tshirts', $selectedCategories ?? []) ? 'checked' : '' ?> />
+      <label for="tshirts">T-Shirt</label>
+   </div>
 </form>
  </section>
 
@@ -227,11 +234,6 @@ $products = Database::getAll();
     ?>
     <p class="product-card-p product-price">&euro; <?= $formattedPrice ?></p>
 </div>
-
-
-                
-               
-
                   <!-- EINDE PRODUCT KAART 1 -->
                <?php endforeach; ?>
             </div>
