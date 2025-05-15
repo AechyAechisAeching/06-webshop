@@ -1,4 +1,3 @@
-
 <?php
 
 @include_once(__DIR__.'/src/Helpers/Auth.php');
@@ -9,27 +8,32 @@ setLastVisitedPage();
 
 @include_once(__DIR__ . '/template/head.inc.php');
 
-// Get all the categories first
 Database::query("SELECT * FROM `categories`");
 $categories = Database::getAll();
-
-$selectedCategories = isset($_GET['categories']) ? $_GET['categories'] : [];
+$selectedCategories = $_GET['categories'] ?? [];
+$itemsPerPage = 6;
+$currentPage = isset($_GET['page']) ? max((int)$_GET['page'], 1) : 1;
+$offset = ($currentPage - 1) * $itemsPerPage;
+$whereClause = "";
+$params = [];
 
 if (!empty($selectedCategories)) {
    $placeholders = implode(',', array_fill(0, count($selectedCategories), '?'));
-   Database::query("SELECT * FROM `products` WHERE `category` IN ($placeholders)", $selectedCategories);
-} else {
-   Database::query("SELECT * FROM `products`");
+   $whereClause = "WHERE `category` IN ($placeholders)";
+   $params = $selectedCategories;
 }
 
+Database::query("SELECT COUNT(*) AS total FROM `products` $whereClause", $params);
+$totalProducts = Database::get()->total;
+$totalPages = ceil($totalProducts / $itemsPerPage);
+
+Database::query("SELECT * FROM `products` $whereClause LIMIT $itemsPerPage OFFSET $offset", $params);
 $products = Database::getAll();
-
-
 ?>
 
       <!-- -- Css Styles -- -->
        <style>
-/* Product Image */
+
 .product-image {
   width: 100%;
   height: 220px;
@@ -37,7 +41,7 @@ $products = Database::getAll();
   border-radius: 0.75rem 0.75rem 0 0;
 }
 
-/* Filters */
+
 .category-filters {
   display: flex;
   flex-wrap: wrap;
@@ -76,7 +80,6 @@ $products = Database::getAll();
   color: #000;
 }
 
-/* Product Card */
 .product-card {
   display: flex;
   flex-direction: column;
@@ -127,118 +130,135 @@ $products = Database::getAll();
   margin-top: 12px;
 }
 
-/* Product Grid */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 30px;
   padding: 2px 0;
 }
+
+.pagination-container {
+   text-align: center;
+   margin-top: 15px;
+}
+
+.pagination-button {
+   margin: 0 5px;
+   padding: 8px 25px;
+   border-radius: 0.5rem;
+   text-decoration: none;
+   transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination-button:hover {
+   background-color:rgb(115, 155, 255);
+   color:rgb(255, 255, 255);
+   font-weight: bold;
+   border: 2px solid black;
+   
+}
+
+.active-page {
+   background-color: #1e87f0;
+   color: white;
+}
+
 </style>
 
       <!-- -- Css Styles -- -->
 
-      <?php if (hasMessage('success')): ?>
-         <div class="uk-alert-success" uk-alert>
-            <a href class="uk-alert-close" uk-close></a>
-            <p><?= getMessage('success') ?></p>
-         </div>
-      <?php endif; ?>
-
-      <?php if (hasError('failed')) : ?>
-         <div class="uk-alert-danger" uk-alert>
-            <a href class="uk-alert-close" uk-close></a>
-            <p><?= getError('failed') ?></p>
-         </div>
-      <?php endif; ?>
-
-      <div class="uk-grid">
-         <section class="uk-width-1-1">
-  <form method="GET" id="categoryForm" class="category-filters">
-    <?php foreach ($categories as $category): 
-      $value = strtolower($category->name);
-    ?>
-      <input 
-        class="category-checkbox" 
-        type="checkbox" 
-        name="categories[]" 
-        id="<?= $value ?>" 
-        value="<?= $value ?>" 
-        onchange="document.getElementById('categoryForm').submit()" 
-        <?= in_array($value, $selectedCategories ?? []) ? 'checked' : '' ?>
-      />
-      <label for="<?= $value ?>"><?= ucfirst($value) ?></label>
-    <?php endforeach; ?>
-
-   <h3>Categorieën</h3>
-   <hr class="uk-divider" />
-   <div>
-      <input class="uk-checkbox" id="hoodies" type="checkbox" name="categories[]" value="hoodies"
-         onchange="document.getElementById('categoryForm').submit()" 
-         <?= in_array('hoodies', $selectedCategories ?? []) ? 'checked' : '' ?> />
-      <label for="hoodies">Hoodies</label>
+<?php if (hasMessage('success')): ?>
+   <div class="uk-alert-success" uk-alert>
+      <a href class="uk-alert-close" uk-close></a>
+      <p><?= getMessage('success') ?></p>
    </div>
+<?php endif; ?>
 
-   <div>
-      <input class="uk-checkbox" id="pants" type="checkbox" name="categories[]" value="pants"
-         onchange="document.getElementById('categoryForm').submit()" 
-         <?= in_array('pants', $selectedCategories ?? []) ? 'checked' : '' ?> />
-      <label for="pants">Pants</label>
+<?php if (hasError('failed')) : ?>
+   <div class="uk-alert-danger" uk-alert>
+      <a href class="uk-alert-close" uk-close></a>
+      <p><?= getError('failed') ?></p>
    </div>
-   <div>
-      <input class="uk-checkbox" id="accessoires" type="checkbox" name="categories[]" value="accessoires"
-         onchange="document.getElementById('categoryForm').submit()" 
-         <?= in_array('accessoires', $selectedCategories ?? []) ? 'checked' : '' ?> />
-      <label for="accessoires">Accessoires</label>
-   </div>
+<?php endif; ?>
 
-   <div>
-      <input class="uk-checkbox" id="shoes" type="checkbox" name="categories[]" value="shoes"
-         onchange="document.getElementById('categoryForm').submit()" 
-         <?= in_array('shoes', $selectedCategories ?? []) ? 'checked' : '' ?> />
-      <label for="shoes">Shoes</label>
-   </div>
-   
-   <div>
-      <input class="uk-checkbox" id="tshirts" type="checkbox" name="categories[]" value="tshirts"
-         onchange="document.getElementById('categoryForm').submit()" 
-         <?= in_array('tshirts', $selectedCategories ?? []) ? 'checked' : '' ?> />
-      <label for="tshirts">T-Shirt</label>
-   </div>
-</form>
- </section>
+<div class="uk-grid">
+   <section class="uk-width-1-1">
+      <form method="GET" id="categoryForm" class="category-filters">
+         <?php foreach ($categories as $category):
+            $value = strtolower($category->name);
+         ?>
+            <input 
+               class="category-checkbox" 
+               type="checkbox" 
+               name="categories[]" 
+               id="<?= $value ?>" 
+               value="<?= $value ?>" 
+               onchange="document.getElementById('categoryForm').submit()" 
+               <?= in_array($value, $selectedCategories ?? []) ? 'checked' : '' ?>
+            />
+            <label for="<?= $value ?>"><?= ucfirst($value) ?></label>
+         <?php endforeach; ?>
 
-         <section class="uk-width-5-8">
-           <h4 style="padding: 5px;" class="uk-text-muted uk-text-small">
-    Gekozen categorieën: 
-    <?php  
-        if (!empty($selectedCategories)) {
-            echo implode(', ', array_map('ucfirst', $selectedCategories)); 
-        } else {
-            echo 'Alle';
-        }
-    ?>
-</h4>
-            <div class="product-grid">
-               <?php foreach ($products as $product) : ?>
-                <!-- PRODUCT KAART 1 -->
-               <a class="product-card uk-card uk-card-home uk-card-default uk-card-small" href="product.php?product_id=<?= $product->productID ?>">
-  <div class="uk-card-media-top uk-align-center">
-    <img src="data:image/jpeg;base64,<?= base64_encode($product->image) ?>" alt="Product image" class="product-image">
-  </div>
- <div class="uk-card-body uk-card-body-home">
-    <h4 class="product-card-title"><?= htmlspecialchars($product->productname) ?></h4>
-    <p class="product-card-p"><?= substr($product->description, 0, 89) . '...' ?></p>
-    <?php 
-      $formattedPrice = number_format($product->price, 2, ',', '');
-    ?>
-    <p class="product-card-p product-price">&euro; <?= $formattedPrice ?></p>
-</div>
-                  <!-- EINDE PRODUCT KAART 1 -->
-               <?php endforeach; ?>
+         <h3>Categorieën</h3>
+         <hr class="uk-divider" />
+
+         <?php
+         // Manual category options
+         $manualCategories = ['hoodies', 'pants', 'accessoires', 'shoes', 'tshirts'];
+         foreach ($manualCategories as $manual) {
+         ?>
+            <div>
+               <input class="uk-checkbox" id="<?= $manual ?>" type="checkbox" name="categories[]" value="<?= $manual ?>"
+                  onchange="document.getElementById('categoryForm').submit()" 
+                  <?= in_array($manual, $selectedCategories ?? []) ? 'checked' : '' ?> />
+               <label for="<?= $manual ?>"><?= ucfirst($manual) ?></label>
             </div>
-         </section>
+         <?php } ?>
+      </form>
+   </section>
+
+   <section class="uk-width-5-8">
+      <h4 style="padding: 5px;" class="uk-text-muted uk-text-small">
+         Gekozen categorieën: 
+         <?= !empty($selectedCategories) ? implode(', ', array_map('ucfirst', $selectedCategories)) : 'Alle' ?>
+      </h4>
+
+      <div class="product-grid">
+         <?php foreach ($products as $product): ?>
+            <a class="product-card uk-card uk-card-home uk-card-default uk-card-small" href="product.php?product_id=<?= $product->productID ?>">
+               <div class="uk-card-media-top uk-align-center">
+                  <img src="data:image/jpeg;base64,<?= base64_encode($product->image) ?>" alt="Product image" class="product-image">
+               </div>
+               <div class="uk-card-body uk-card-body-home">
+                  <h4 class="product-card-title"><?= htmlspecialchars($product->productname) ?></h4>
+                  <p class="product-card-p"><?= substr($product->description, 0, 89) . '...' ?></p>
+                  <p class="product-card-p product-price">&euro; <?= number_format($product->price, 2, ',', '') ?></p>
+               </div>
+            </a>
+         <?php endforeach; ?>
       </div>
 
-<?php
-include_once(__DIR__ . '/template/foot.inc.php');
+    <!-- Pagination Controls -->
+<div class="pagination-container">
+   <?php
+   $queryStringBase = '';
+   foreach ($selectedCategories as $cat) {
+      $queryStringBase .= 'categories[]=' . urlencode($cat) . '&';
+   }
+
+   if ($currentPage > 1) {
+      echo '<a href="?' . $queryStringBase . 'page=' . ($currentPage - 1) . '" class="pagination-button uk-button uk-button-default">← Vorige</a>';
+   }
+
+   for ($i = 1; $i <= $totalPages; $i++) {
+      $active = $i === $currentPage ? 'uk-button-primary active-page' : 'uk-button-default';
+      echo '<a href="?' . $queryStringBase . 'page=' . $i . '" class="pagination-button uk-button ' . $active . '">' . $i . '</a>';
+   }
+
+   if ($currentPage < $totalPages) {
+      echo '<a href="?' . $queryStringBase . 'page=' . ($currentPage + 1) . '" class="pagination-button uk-button uk-button-default">Volgende</a>';
+   }
+   ?>
+</div>
+
+<?php include_once(__DIR__ . '/template/foot.inc.php'); ?>
