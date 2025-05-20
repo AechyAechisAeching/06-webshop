@@ -108,13 +108,9 @@ class Database
 
    public static function insert(string $table, array $data): bool|Object
    {
-      [
-         'column_names' => $column_names,
-         'values' => $values
-      ] = self::destructureInsertData($data);
-      $created_at = date("Y-m-d H:i:s"); //Carbon::now()->toDateTimeString();
+      ['column_names' => $column_names, 'values' => $values] = self::destructureInsertData($data);
 
-      $sql = "INSERT INTO `$table`($column_names, `created_at`, `updated_at`) VALUES($values, '$created_at', '$created_at')";
+      $sql = "INSERT INTO `$table`($column_names) VALUES($values)";
 
       self::query($sql);
 

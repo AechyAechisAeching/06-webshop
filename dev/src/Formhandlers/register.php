@@ -119,13 +119,13 @@ Database::insert('customers',[
    'zipcode' => $zipcode,
    'city' => $city,
    'email' => $email,
-   'password' => password_hash($password, PASSWORD_DEFAULT)
+   'password' => password_hash($password, PASSWORD_BCRYPT)
 ]);
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
+// echo "<pre>";
+// print_r($_POST);
+// echo "</pre>";
 
 
-// header('Location: ../../login.php');
-echo "Gebruiker succesvol geregistreerd";
+header('Location: ../../login.php');
+// echo "Gebruiker succesvol geregistreerd";
 exit();

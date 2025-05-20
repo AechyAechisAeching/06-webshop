@@ -26,10 +26,8 @@
       <?php endif; ?>
       <div class="uk-card-body uk-flex uk-flex-between uk-card-body-gap">
          <div class="uk-width-1-3">
-            <img src="img/logo4.png" class="uk-card-media uk-card-body-login-logo" alt="Webshop Het Witte Kippetje" title="Webshop Het Witte Kippetje" />
+            <img src="img/Webshop_Logo.png" class="uk-card-media uk-card-body-login-logo" alt="" title="Webshop" />
             <div class="uk-flex uk-flex-column uk-flex-middle">
-               <p class="uk-text-center uk-margin-remove-bottom uk-text-muted">Webshop</p>
-               <h4 class="uk-text-uppercase uk-text-center uk-margin-remove-vertical uk-text-muted">Clothing Webshop</h4>
             </div>
          </div>
          <div class="uk-width-2-3 uk-flex uk-flex-column">
