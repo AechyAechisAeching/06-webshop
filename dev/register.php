@@ -9,7 +9,7 @@ include_once(__DIR__ . '/template/head.inc.php');
 <form method="POST" action="src/Formhandlers/register.php" class="uk-width-1-1 uk-flex uk-flex-center">
    <div class="uk-card uk-card-default uk-width-4-5 uk-padding-small">
       <div class="uk-card-header uk-flex uk-gap">
-         <img src="img/logo4.png" class="uk-card-media uk-card-register-logo" alt="Webshop Het Witte Kippetje" title="Webshop Het Witte Kippetje" />
+         <img src="img/Webshop_Logo.png" class="uk-card-media uk-card-register-logo" alt="Clothing Webshop" title="Clothing Webshop" />
          <h2 class="uk-text-uppercase uk-margin-remove-top">Registreren</h2>
       </div>
       <?php if (hasError('registration-error')) : ?>
