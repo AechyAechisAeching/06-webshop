@@ -76,13 +76,26 @@ $product = Database::get();
                            
                      </form>
                   <?php else : ?>
-                     <a href="javascript:void" class="uk-button uk-button-primary" onclick="event.preventDefault(); alert('Om te kunnen bestellen dient u geregistreerd en ingelogd te zijn.');">
-                        <span uk-icon="icon: cart"></span>
-                        In winkelwagen
-                     </a>
-                     <form method="POST" action="src/Formhandlers/favorite.php" class="favorite-form">
-                     <input type="hidden" name="product_id" value="<?= $product->id ?>" />
-                  <?php endif; ?>
+                  <a href="#" class="uk-button uk-button-primary" uk-toggle="target: #loginRegisterModal">
+                  <span uk-icon="icon: cart"></span> In winkelwagen
+                  </a>
+
+                  <!-- Modal -->
+                  <div id="loginRegisterModal" uk-modal>
+                  <div class="uk-modal-dialog uk-modal-body">
+                     <h2 class="uk-modal-title">Login of Registreren</h2>
+                     <p>U moet ingelogd zijn om te bestellen.</p>
+                     <p class="uk-text-right">
+                        <button class="uk-button uk-button-default uk-modal-close" onclick="window.location.href='login.php'">Login</button>
+                        <button class="uk-button uk-button-primary" onclick="window.location.href='register.php'">Registreren</button>
+                     </p>
+                  </div>
+                  </div>
+
+  <form method="POST" action="src/Formhandlers/favorite.php" class="favorite-form">
+    <input type="hidden" name="product_id" value="<?= $product->id ?>" />
+<?php endif; ?>
+
                </div>
             </div>
          </section>
