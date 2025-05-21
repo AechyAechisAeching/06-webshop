@@ -14,6 +14,7 @@ if (!isset($_GET['product_id'])) {
    exit(0);
 }
 
+
 $product_id = $_GET['product_id'];
 
 // Now get all the products
@@ -66,6 +67,11 @@ $product = Database::get();
                            <span uk-icon="icon: cart"></span>
                            In winkelwagen
                         </button>
+                         <button type="submit" class="uk-button uk-button-default favorite-button">
+                     <span uk-icon="icon: heart"></span>
+                     Favoriet
+                     </button>
+                     </form>
                         
                            
                      </form>
@@ -76,11 +82,6 @@ $product = Database::get();
                      </a>
                      <form method="POST" action="src/Formhandlers/favorite.php" class="favorite-form">
                      <input type="hidden" name="product_id" value="<?= $product->id ?>" />
-                     <button type="submit" class="uk-button uk-button-default favorite-button">
-                     <span uk-icon="icon: heart"></span>
-                     Favoriet
-                     </button>
-                     </form>
                   <?php endif; ?>
                </div>
             </div>
