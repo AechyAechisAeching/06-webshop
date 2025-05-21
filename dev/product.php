@@ -29,6 +29,7 @@ $product = Database::get();
     object-fit: contain;
     padding-bottom: 70px;
   }
+  
 </style>
 
  <button class="btn" onclick="history.back()">Go Back</button>

@@ -144,17 +144,30 @@ class Database
       return $result;
    }
 
-   public static function update(string $table, int $id, array $data = []): bool|Object|array
-   {
-      ['sql' => $set_fields, 'placeholders' => $placeholders] = self::destructureUpdateData($data);
+public static function update(string $table, int $id, array $data): bool|object
+{
+    if (empty($data)) return false;
 
-      $updated_at = date("Y-m-d H:i:s"); //Carbon::now()->toDateTimeString();
+    $data['updated_at'] = date("Y-m-d H:i:s");
 
-      $sql = "UPDATE `$table` SET $set_fields, `updated_at` = '$updated_at' WHERE `$table`.`id` = $id";
-      self::query($sql, $placeholders);
+    $set = [];
+    $params = [];
+    foreach ($data as $key => $value) {
+        $set[] = "`$key` = :$key";
+        $params[":$key"] = $value;
+    }
 
-      self::query("SELECT * FROM `$table` WHERE `$table`.`id` = $id");
+    $params[":id"] = $id;
 
-      return self::get();
-   }
+    $sql = "UPDATE `$table` SET " . implode(', ', $set) . " WHERE `id` = :id";
+
+    if (!self::query($sql, $params)) return false;
+
+    if (self::query("SELECT * FROM `$table` WHERE `id` = :id", [':id' => $id])) {
+        return self::get();
+    }
+
+    return false;
+}
+
 }
